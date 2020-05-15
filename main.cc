@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "core/point_cloud.h"
+#include "core/concorrent/point_cloud.h"
 
 using ppcl::core::concurrent::PointCloudXYZd;
 
