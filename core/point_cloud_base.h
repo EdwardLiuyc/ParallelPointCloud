@@ -76,7 +76,10 @@ class PointCloud {
 
   class Point {
    public:
+    // default constrcutor
     Point() { data_.setZero(); }
+
+    // constrcutor with all raw data
     template <typename... Args>
     explicit Point(Args&&... args) {
       init(args...);
@@ -86,9 +89,12 @@ class PointCloud {
 
     // accessor
     inline Scalar& operator[](size_t n) { return data_(n, 0); }
-    inline Scalar& channel(const std::string& channel_name) {
+    inline Scalar& operator[](const std::string& channel_name) {
       CHECK_NE(channel_name_index_->count(channel_name), 0);
       return data_(channel_name_index_->at(channel_name), 0);
+    }
+    inline Scalar& channel(const std::string& channel_name) {
+      return (*this)[channel_name];
     }
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -117,6 +123,8 @@ class PointCloud {
   using InnerPointsContainer = Container<Point>;
   using iterator = typename InnerPointsContainer::iterator;
   using const_iterator = typename InnerPointsContainer::const_iterator;
+  using Ptr = typename std::shared_ptr<PointCloud>;
+  using ConstPtr = typename std::shared_ptr<const PointCloud>;
 
   // Element access
   inline Point at(size_t n) { return points_.at(n); }

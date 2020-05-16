@@ -20,21 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "core/concorrent/point_cloud.h"
+#ifndef BENCHMARK_PERFORMANCE_PROCESS_INFO_H_
+#define BENCHMARK_PERFORMANCE_PROCESS_INFO_H_
 
-using ppcl::core::concurrent::PointCloudXYZd;
+#include <pwd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <fstream>
+#include <iostream>
+#include <queue>
+#include <string>
+#include <thread>
 
-int main(int, char**) {
-  PointCloudXYZd ppcl_pointcloud;
+namespace ppcl {
+namespace benchmark {
+namespace performance {
 
-  ppcl_pointcloud.emplace_back(1.1, 1.2, 1.3);
-  ppcl_pointcloud.emplace_back(2.1, 2.2, 2.3);
-  ppcl_pointcloud.emplace_back(3.1, 3.2, 3.3);
-  LOG(INFO) << ppcl_pointcloud.size();
+struct ProcStatus;
 
-  for (auto& point : ppcl_pointcloud) {
-    LOG(INFO) << point["x"];
-  }
+class ProcessProfiler {
+ public:
+  ProcessProfiler();
 
-  return 0;
-}
+  ~ProcessProfiler();
+
+ private:
+  const char* GetItems(const char* buffer, unsigned int item);
+
+  uint64_t GetCpuTotalOccpy();
+
+  uint64_t GetCpuProcOccpy(unsigned int pid);
+
+  float GetProcCpu(unsigned int pid);
+
+  bool GetProcStatus(ProcStatus* status);
+
+  void Run();
+
+  pid_t pid_;
+  std::thread profiling_thread_;
+  bool run_ = true;
+};
+
+}  // namespace performance
+}  // namespace benchmark
+}  // namespace ppcl
+
+#endif  // BENCHMARK_PERFORMANCE_PROCESS_INFO_H_
