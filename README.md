@@ -1,4 +1,4 @@
-# ParallelPointCloud
+![ppcl_logo](doc/ppcl_logo.png)
 
 ## motivation
 
